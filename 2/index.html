@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Клуб настольных игр «Сбор»</title>
+    <meta name="description" content="«Сбор» — клуб настольных игр, где можно встретиться с друзьями, познакомиться с новыми людьми и попробовать что-то интересное.">
+    
+    <style>
+        /* Переменные и настройки */
+        :root {
+            --bg: #F7F3EA;
+            --text: #252823;
+            --accent: #E87842;
+            --accent-hover: #D06B38;
+            --secondary: #63745A;
+            --card-bg: #FFFFFF;
+            --border: rgba(37, 40, 35, 0.12);
+            --header-height: 72px;
+            --radius: 16px;
+            --transition: 0.3s ease;
+            --shadow: 0 4px 12px rgba(37, 40, 35, 0.05);
+            --shadow-hover: 0 8px 24px rgba(37, 40, 35, 0.1);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: var(--header-height);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Утилиты и типографика */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h1, h2, h3, h4 {
+            line-height: 1.2;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+        }
+
+        h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 24px;
+            letter-spacing: -0.01em;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            margin-bottom: 12px;
+        }
+
+        p {
+            font-size: 1rem;
+            margin-bottom: 16px;
+        }
+
+        .text-lead {
+            font-size: clamp(1.125rem, 2vw, 1.25rem);
+            color: rgba(37, 40, 35, 0.8);
+            max-width: 60ch;
+            margin-bottom: 32px;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+            transition: color var(--transition);
+        }
+
+        /* Кнопки */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all var(--transition);
+            text-align: center;
+        }
+
+        .btn:focus-visible, a:focus-visible, button:focus-visible, input:focus-visible {
+            outline: 3px solid var(--secondary);
+            outline-offset: 4px;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: var(--text);
+            border-color: var(--accent);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+            border-color: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border-color: var(--secondary);
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(99, 116, 90, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Шапка и навигация */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: rgba(247, 243, 234, 0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+
+        .logo svg {
+            width: 28px;
+            height: 28px;
+            fill: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            color: var(--text);
+        }
+
+        .menu-toggle svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Секции общие */
+        section {
+            padding: 96px 0;
+        }
+
+        .section-header {
+            max-width: 800px;
+            margin-bottom: 48px;
+        }
+
+        /* Главный экран */
+        .hero {
+            display: flex;
+            align-items: center;
+            min-height: calc(100vh - var(--header-height));
+            padding-top: 40px;
+            padding-bottom: 80px;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+        }
+
+        .hero-content .btn-group {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        /* Декоративная композиция (HTML/CSS графика) */
+        .hero-visual {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            max-width: 500px;
+            margin: 0 auto;
+            perspective: 1000px;
+        }
+
+        .dec-card {
+            position: absolute;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 2px solid var(--border);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backface-visibility: hidden;
+            transition: transform var(--transition);
+        }
+
+        .dec-card-1 {
+            width: 180px;
+            height: 260px;
+            top: 10%;
+            left: 20%;
+            transform: rotate(-15deg);
+            z-index: 2;
+        }
+
+        .dec-card-2 {
+            width: 180px;
+            height: 260px;
+            top: 20%;
+            right: 15%;
+            transform: rotate(10deg);
+            z-index: 1;
+        }
+
+        .dec-card-inner {
+            width: calc(100% - 24px);
+            height: calc(100% - 24px);
+            border: 2px dashed rgba(37, 40, 35, 0.2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dec-card-inner svg {
+            width: 64px;
+            height: 64px;
+            fill: var(--accent);
+            opacity: 0.8;
+        }
+
+        .dec-chip {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: var(--secondary);
+            border-radius: 50%;
+            bottom: 15%;
+            left: 10%;
+            z-index: 3;
+            border: 8px dashed rgba(255,255,255,0.3);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dec-dice {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            background: var(--accent);
+            border-radius: 16px;
+            bottom: 25%;
+            right: 25%;
+            z-index: 3;
+            transform: rotate(25deg);
+            box-shadow: 4px 4px 0 rgba(37, 40, 35, 0.1);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            padding: 16px;
+            gap: 8px;
+        }
+
+        .dec-dice-dot {
+            background: var(--card-bg);
+            border-radius: 50%;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Карточки */
+        .grid-4, .grid-3, .grid-2 {
+            display: grid;
+            gap: 24px;
+        }
+
+        .grid-4 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            transition: transform var(--transition), box-shadow var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(232, 120, 66, 0.1);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .card-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* Игры */
+        .game-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-category {
+            display: inline-block;
+            background: var(--secondary);
+            color: #FFF;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 4px 10px;
+            border-radius: 100px;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+        
+        .game-deco {
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            width: 120px;
+            height: 120px;
+            opacity: 0.04;
+            pointer-events: none;
+        }
+
+        /* Встречи */
+        .meeting-card {
+            border-top: 4px solid var(--accent);
+        }
+
+        .meeting-meta {
+            font-size: 0.9rem;
+            color: var(--secondary);
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .meeting-price {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: auto 0 24px 0;
+            padding-top: 24px;
+        }
+
+        .meetings-footer {
+            margin-top: 32px;
+            text-align: center;
+        }
+
+        .disclaimer {
+            margin-top: 16px;
+            font-size: 0.85rem;
+            color: rgba(37, 40, 35, 0.6);
+        }
+
+        /* Первый визит */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+            margin-bottom: 64px;
+        }
+
+        .step {
+            position: relative;
+        }
+        
+        .step-num {
+            font-size: 3rem;
+            font-weight: 800;
+            color: rgba(232, 120, 66, 0.2);
+            line-height: 1;
+            margin-bottom: 16px;
+        }
+
+        .faq-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            max-width: 800px;
+        }
+
+        .faq-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+        }
+
+        .faq-item h4 {
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .faq-item p {
+            margin-bottom: 0;
+            color: rgba(37, 40, 35, 0.8);
+        }
+
+        /* Контакты */
+        .contacts-wrapper {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 48px;
+            background: var(--card-bg);
+            padding: 48px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        .schedule-list {
+            list-style: none;
+            margin-top: 24px;
+        }
+
+        .schedule-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .schedule-list li:last-child {
+            border-bottom: none;
+        }
+
+        .alert-box {
+            background: rgba(232, 120, 66, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 24px;
+            border-radius: 0 8px 8px 0;
+            height: fit-content;
+        }
+
+        /* Подвал */
+        footer {
+            background-color: #1A1C18;
+            color: rgba(255, 255, 255, 0.8);
+            padding: 64px 0 32px;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #FFF;
+            margin-bottom: 8px;
+        }
+
+        .footer-tagline {
+            font-size: 1.1rem;
+            margin-bottom: 48px;
+        }
+
+        .footer-bottom {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+            padding-top: 32px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.85rem;
+        }
+
+        .footer-bottom a {
+            color: #FFF;
+        }
+
+        .footer-bottom a:hover {
+            color: var(--accent);
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            section { padding: 64px 0; }
+            .hero-grid { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+            .hero-content .btn-group { justify-content: center; }
+            .hero { padding-bottom: 40px; min-height: auto; }
+            .menu-toggle { display: block; }
+            .nav-links {
+                position: absolute;
+                top: var(--header-height);
+                left: 0;
+                right: 0;
+                background: var(--card-bg);
+                flex-direction: column;
+                gap: 0;
+                padding: 16px 0;
+                border-bottom: 1px solid var(--border);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+                display: none;
+            }
+            .nav-links.nav-links--open { display: flex; }
+            .nav-links li { padding: 12px 24px; text-align: center; }
+            .nav-links a { display: block; font-size: 1.1rem; }
+            .contacts-wrapper { padding: 24px; }
+            .footer-bottom { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Шапка и навигация -->
+    <header>
+        <div class="container header-inner">
+            <a href="#" class="logo" aria-label="На главную">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2C10.9 2 10 2.9 10 4C10 5.1 10.9 6 12 6C13.1 6 14 5.1 14 4C14 2.9 13.1 2 12 2ZM15.5 7H8.5C7.1 7 6 8.1 6 9.5V13H8V22H11V16H13V22H16V13H18V9.5C18 8.1 16.9 7 15.5 7Z"/>
+                </svg>
+                Сбор
+            </a>
+            
+            <nav>
+                <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Открыть меню">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                <ul class="nav-links" id="main-nav">
+                    <li><a href="#about">О клубе</a></li>
+                    <li><a href="#games">Игры</a></li>
+                    <li><a href="#meetings">Встречи</a></li>
+                    <li><a href="#first-visit">Первый визит</a></li>
+                    <li><a href="#contacts">Контакты</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Главный экран -->
+        <section id="hero" class="hero container">
+            <div class="hero-grid">
+                <div class="hero-content">
+                    <h1>Хорошие игры начинаются с хорошей компании.</h1>
+                    <p class="text-lead">«Сбор» — клуб настольных игр, где можно встретиться с друзьями, познакомиться с новыми людьми и попробовать что-то интересное. Приходи со своей компанией или один — поможем освоиться.</p>
+                    <div class="btn-group">
+                        <a href="#meetings" class="btn btn-primary">Выбрать встречу</a>
+                        <a href="#games" class="btn btn-secondary">Посмотреть игры</a>
+                    </div>
+                </div>
+                
+                <div class="hero-visual" aria-hidden="true">
+                    <div class="dec-card dec-card-1">
+                        <div class="dec-card-inner">
+                            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        </div>
+                    </div>
+                    <div class="dec-card dec-card-2">
+                        <div class="dec-card-inner">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C10.9 2 10 2.9 10 4C10 5.1 10.9 6 12 6C13.1 6 14 5.1 14 4C14 2.9 13.1 2 12 2ZM15.5 7H8.5C7.1 7 6 8.1 6 9.5V13H8V22H11V16H13V22H16V13H18V9.5C18 8.1 16.9 7 15.5 7Z"/></svg>
+                        </div>
+                    </div>
+                    <div class="dec-chip"></div>
+                    <div class="dec-dice">
+                        <div class="dec-dice-dot"></div>
+                        <div class="dec-dice-dot"></div>
+                        <div class="dec-dice-dot"></div>
+                        <div class="dec-dice-dot"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- О клубе -->
+        <section id="about" class="container">
+            <div class="section-header">
+                <h2>Собираемся за одним столом</h2>
+                <p class="text-lead" style="margin-bottom: 16px;">Мы собираемся за одним столом, чтобы общаться, пробовать новые игры и проводить время вместе. Здесь не нужно заранее знать правила: ведущий поможет выбрать игру и объяснит, с чего начать.</p>
+                <p class="text-lead">Можно прийти с друзьями или присоединиться к другим участникам. Главное — желание провести время вместе и попробовать что-то новое.</p>
+            </div>
+        </section>
+
+        <!-- Преимущества -->
+        <section id="advantages" class="container" style="padding-top: 0;">
+            <h3>Легко сделать первый ход</h3>
+            <div class="grid-4" style="margin-top: 32px;">
+                <div class="card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    </div>
+                    <h4>Поможем с правилами</h4>
+                    <p>Перед началом объясним основные действия и поможем освоиться.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
+                    <h4>Можно прийти одному</h4>
+                    <p>Подберём стол с другими участниками, чтобы ты смог включиться в игру.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                    </div>
+                    <h4>Игры под настроение</h4>
+                    <p>Предложим спокойный, творческий или соревновательный формат.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    </div>
+                    <h4>Всё готово к встрече</h4>
+                    <p>Игры и пространство подготовлены организаторами.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Подборка игр -->
+        <section id="games" class="container">
+            <div class="section-header">
+                <h2>Во что играем</h2>
+                <p class="text-lead">В подборке есть игры для знакомства, общения и вдумчивых партий. На встрече поможем выбрать подходящую.</p>
+            </div>
+            
+            <div class="grid-3">
+                <div class="card game-card">
+                    <span class="game-category">Стратегия</span>
+                    <h3>Каркассон</h3>
+                    <p>Создавай общее игровое пространство из отдельных участков и продумывай свои ходы.</p>
+                    <svg class="game-deco" viewBox="0 0 24 24" fill="currentColor"><path d="M3 21h18v-8l-9-5-9 5v8z"/><path d="M9 21v-6h6v6"/></svg>
+                </div>
+                <div class="card game-card">
+                    <span class="game-category">Воображение</span>
+                    <h3>Диксит</h3>
+                    <p>Придумывай ассоциации к необычным иллюстрациям и попробуй понять идеи других игроков.</p>
+                    <svg class="game-deco" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </div>
+                <div class="card game-card">
+                    <span class="game-category">Командная игра</span>
+                    <h3>Кодовые имена</h3>
+                    <p>Обсуждай подсказки и находи связи между словами вместе со своей командой.</p>
+                    <svg class="game-deco" viewBox="0 0 24 24" fill="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3" fill="var(--card-bg)"/></svg>
+                </div>
+                <div class="card game-card">
+                    <span class="game-category">Приключение</span>
+                    <h3>Билет на поезд</h3>
+                    <p>Планируй маршруты и соединяй города на игровом поле.</p>
+                    <svg class="game-deco" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="5" width="16" height="10" rx="2"/><path d="M8 21v-2"/><path d="M16 21v-2"/><path d="M2 15h20"/><circle cx="7" cy="11" r="1"/><circle cx="12" cy="11" r="1"/><circle cx="17" cy="11" r="1"/></svg>
+                </div>
+                <div class="card game-card">
+                    <span class="game-category">Быстрая игра</span>
+                    <h3>Уно</h3>
+                    <p>Начни с карточной игры, которую удобно предложить компании для короткой партии.</p>
+                    <svg class="game-deco" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                </div>
+                <div class="card game-card">
+                    <span class="game-category">Классика</span>
+                    <h3>Шахматы</h3>
+                    <p>Попробуй знакомую игру, в которой каждый ход влияет на дальнейший план.</p>
+                    <svg class="game-deco" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a3 3 0 0 0-3 3c0 1.33 1.25 2.5 2 3 .75-.5 2-1.67 2-3a3 3 0 0 0-3-3z"/><path d="M9 10h6v2H9z"/><path d="M10 12l-2 8h8l-2-8"/><path d="M6 20h12v2H6z"/></svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Встречи -->
+        <section id="meetings" class="container">
+            <div class="section-header" style="text-align: center; margin: 0 auto 48px;">
+                <h2>Выбери свой сбор</h2>
+            </div>
+            
+            <div class="grid-3">
+                <div class="card meeting-card">
+                    <h3>Первый ход</h3>
+                    <div class="meeting-meta">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        Среда, 18:00
+                    </div>
+                    <p>Встреча для новичков с объяснением правил.</p>
+                    <div class="meeting-price">300 ₽</div>
+                    <a href="#contacts" class="btn btn-secondary" style="width: 100%;">Как записаться</a>
+                </div>
+                <div class="card meeting-card">
+                    <h3>Пятничный сбор</h3>
+                    <div class="meeting-meta">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        Пятница, 19:00
+                    </div>
+                    <p>Вечер для общения и знакомства с разными играми.</p>
+                    <div class="meeting-price">400 ₽</div>
+                    <a href="#contacts" class="btn btn-secondary" style="width: 100%;">Как записаться</a>
+                </div>
+                <div class="card meeting-card">
+                    <h3>Большой стол</h3>
+                    <div class="meeting-meta">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        Суббота, 16:00
+                    </div>
+                    <p>Встреча для тех, кто хочет провести за играми больше времени.</p>
+                    <div class="meeting-price">500 ₽</div>
+                    <a href="#contacts" class="btn btn-secondary" style="width: 100%;">Как записаться</a>
+                </div>
+            </div>
+            
+            <div class="meetings-footer">
+                <p>В стоимость входит участие во встрече и использование игр клуба.</p>
+                <p class="disclaimer">Расписание и цены приведены для демонстрации учебного проекта.</p>
+            </div>
+        </section>
+
+        <!-- Первый визит и частые вопросы -->
+        <section id="first-visit" class="container">
+            <div class="section-header">
+                <h2>Первый раз? Вот как всё устроено</h2>
+            </div>
+            
+            <div class="steps">
+                <div class="step">
+                    <div class="step-num">01</div>
+                    <h3>Выбери встречу</h3>
+                    <p>Посмотри расписание и найди подходящий формат.</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">02</div>
+                    <h3>Свяжись с организатором</h3>
+                    <p>Перед посещением уточни наличие мест и условия участия.</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">03</div>
+                    <h3>Приходи к началу</h3>
+                    <p>Познакомимся, выберем игру и разберём правила.</p>
+                </div>
+            </div>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <h4>Можно ли прийти одному?</h4>
+                    <p>Да. По концепции клуба организатор помогает присоединиться к другим участникам.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>Нужно ли знать правила?</h4>
+                    <p>Нет. Перед началом ведущий объясняет основные действия.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>Можно ли принести свою игру?</h4>
+                    <p>Да, предварительно обсудив это с организатором.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>Что входит в стоимость?</h4>
+                    <p>Участие во встрече и использование игр клуба.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>Нужно ли записываться заранее?</h4>
+                    <p>Да. Это помогает организатору подготовить столы и подобрать игры.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Контакты -->
+        <section id="contacts" class="container">
+            <div class="contacts-wrapper">
+                <div>
+                    <h2>До встречи за столом</h2>
+                    <p class="text-lead" style="font-size: 1rem;">Перед посещением свяжись с организатором, чтобы уточнить наличие мест.</p>
+                    
+                    <ul class="schedule-list">
+                        <li>
+                            <strong>Среда</strong>
+                            <span>18:00–22:00</span>
+                        </li>
+                        <li>
+                            <strong>Пятница</strong>
+                            <span>19:00–23:00</span>
+                        </li>
+                        <li>
+                            <strong>Суббота</strong>
+                            <span>16:00–22:00</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="alert-box">
+                    <h3 style="color: var(--accent); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        Внимание
+                    </h3>
+                    <p style="margin-bottom: 0;">Учебный проект: реальные контакты организатора и адрес клуба не указаны. Запись через этот сайт не выполняется.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Подвал -->
+    <footer>
+        <div class="container">
+            <div class="footer-logo">Сбор</div>
+            <div class="footer-tagline">Настольные игры. Живое общение. Хорошая компания.</div>
+            
+            <div class="footer-bottom">
+                <p>Учебный проект по информатике. Клуб, расписание и предложения вымышлены.</p>
+                <a href="#">Наверх &uarr;</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Скрипты -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            const navItems = document.querySelectorAll('.nav-links a');
+
+            // Управление мобильным меню
+            menuToggle.addEventListener('click', () => {
+                const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
+                menuToggle.setAttribute('aria-expanded', !isExpanded);
+                navLinks.classList.toggle('nav-links--open');
+            });
+
+            // Закрытие меню при клике на ссылку
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    menuToggle.setAttribute('aria-expanded', 'false');
+                    navLinks.classList.remove('nav-links--open');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

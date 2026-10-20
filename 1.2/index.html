@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Сбор — учебный лендинг вымышленного клуба настольных игр. Игры, форматы встреч и пример расписания. Реальная запись через сайт недоступна.">
+  <meta name="theme-color" content="#F7F3EA">
+  <meta name="robots" content="noindex, follow">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:site_name" content="Сбор">
+  <meta property="og:title" content="Сбор — учебный лендинг клуба настольных игр">
+  <meta property="og:description" content="Познакомься с концепцией клуба, играми и форматами встреч. Учебный макет: клуб вымышленный, запись недоступна.">
+  <!-- Макет не индексируется. Canonical, og:url и og:image добавляются после выбора реального адреса публикации. -->
+  <title>Сбор — учебный лендинг клуба настольных игр</title>
+  <style>
+    /* Палитра, базовая типографика и доступность */
+    :root {
+      --paper: #f7f3ea;
+      --ink: #252823;
+      --muted: #5b6055;
+      --orange: #e87842;
+      --orange-dark: #91401b;
+      --green: #63745a;
+      --green-dark: #43543c;
+      --line: #dcded2;
+      --white: #fffdf8;
+      --radius: 16px;
+      --header-height: 84px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: Arial, Helvetica, sans-serif; font-size: 1rem; line-height: 1.65; overflow-wrap: break-word; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { font: inherit; }
+    a { color: inherit; text-decoration: none; }
+    svg { display: block; max-width: 100%; }
+    h1, h2, h3, p { margin: 0; }
+    h1, h2 { font-family: Georgia, "Times New Roman", serif; font-weight: 700; letter-spacing: -.035em; line-height: 1.12; text-wrap: balance; overflow-wrap: anywhere; }
+    h2 { font-size: clamp(32px, 3.6vw, 48px); }
+    h3 { font-size: 21px; line-height: 1.25; letter-spacing: -.025em; }
+    p { text-wrap: pretty; }
+    a:focus-visible, button:focus-visible { outline: 3px solid var(--orange-dark); outline-offset: 5px; }
+    section[id], main[id] { scroll-margin-top: calc(var(--header-height) + 24px); }
+    [tabindex="-1"]:focus-visible { outline: 3px solid var(--orange-dark); outline-offset: -3px; }
+    .hero > *, .about-layout > *, .contact-layout > *, .game-copy, .meeting-card, .visit-steps li { min-width: 0; }
+    .container { width: min(1180px, calc(100% - 80px)); margin-inline: auto; }
+    .section { padding-block: 88px; }
+    .eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 19px; color: var(--green-dark); font-size: .875rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .eyebrow::before { content: ""; width: 7px; height: 7px; background: currentColor; border-radius: 50%; flex-shrink: 0; }
+    .section-intro { max-width: 610px; margin-top: 22px; color: var(--muted); }
+    .icon { width: 22px; height: 22px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+    .button { display: inline-flex; justify-content: center; align-items: center; gap: 18px; min-height: 52px; padding: 13px 23px; border: 1px solid transparent; border-radius: 9px; font-size: 14px; font-weight: 700; line-height: 1.35; transition: background .18s, transform .18s, border-color .18s; }
+    .button-primary { background: var(--orange); color: var(--ink); }
+    .button-secondary { border-color: #b5bbab; background: transparent; }
+    .button .icon { width: 18px; height: 18px; }
+    .skip-link { position: fixed; top: 12px; left: 12px; z-index: 100; padding: 10px 16px; border-radius: 8px; background: var(--ink); color: var(--white); transform: translateY(-160%); }
+    .skip-link:focus { transform: translateY(0); }
+    .svg-library { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+    /* Закреплённая шапка и мобильное меню */
+    .site-header { position: sticky; top: 0; z-index: 20; border-bottom: 1px solid var(--line); background: var(--paper); }
+    .header-inner { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 84px; }
+    .logo { display: inline-flex; align-items: center; gap: 10px; font-size: 30px; font-weight: 800; line-height: 1; letter-spacing: -.06em; }
+    .logo-mark { width: 34px; height: 34px; color: var(--orange); }
+    .navigation { display: flex; align-items: center; gap: 27px; }
+    .navigation a { padding: 14px 4px; font-size: .875rem; font-weight: 700; transition: color .18s; }
+    .navigation a[aria-current="location"] { color: var(--orange-dark); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
+    .header-cta { min-height: 44px; padding: 10px 17px; font-size: .875rem; border-color: #bec4b4; }
+    .menu-toggle { display: none; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 9px 12px; border: 1px solid #b5bbab; border-radius: 8px; background: transparent; color: var(--ink); font-size: .875rem; font-weight: 700; cursor: pointer; }
+
+    /* Первый экран: типографика и собственная SVG-композиция */
+    .hero { display: grid; grid-template-columns: 1.13fr 1fr; align-items: center; gap: 32px; padding-top: 70px; padding-bottom: 62px; }
+    .hero h1 { max-width: 660px; font-size: clamp(46px, 4.8vw, 69px); }
+    .hero h1 em { position: relative; color: var(--green-dark); font-weight: inherit; }
+    .demo-notice { width: fit-content; max-width: 100%; margin-top: 20px; padding: 8px 12px; border: 1px solid #d8a889; border-radius: 8px; background: #f9e7d9; color: var(--orange-dark); font-size: .875rem; font-weight: 700; line-height: 1.5; }
+    .hero-description { max-width: 475px; margin-top: 20px; color: var(--muted); font-size: 1rem; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+    .hero-note { display: flex; align-items: center; gap: 8px; margin-top: 24px; color: var(--muted); font-size: .875rem; }
+    .hero-note .icon { width: 17px; height: 17px; color: var(--green); }
+    .hero-art { position: relative; min-width: 0; }
+    .hero-art > svg { width: 100%; height: auto; }
+    .art-caption { position: absolute; right: 23px; bottom: 10px; display: flex; align-items: center; gap: 10px; max-width: 100%; padding: 9px 17px; border: 1px solid #c6cdbb; border-radius: 50px; background: var(--paper); color: var(--green-dark); font-size: .875rem; font-weight: 700; transform: rotate(-5deg); }
+    .hero-bottom { display: flex; justify-content: space-between; gap: 24px; margin-block: 0; padding: 22px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); color: var(--muted); font-size: .875rem; list-style: none; }
+    .hero-bottom li { display: flex; align-items: center; gap: 10px; }
+    .hero-bottom .icon { width: 18px; height: 18px; color: var(--green-dark); }
+
+    /* О клубе и преимущества */
+    .about-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: start; }
+    .about-layout h2 { max-width: 400px; }
+    .about-copy { padding-top: 35px; color: var(--muted); }
+    .about-copy p + p { margin-top: 18px; }
+    .benefits { margin-top: 62px; }
+    .benefits h2 { font-size: 30px; }
+    .benefit-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 25px; }
+    .benefit-card { padding: 26px 22px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); }
+    .benefit-icon { display: flex; align-items: center; justify-content: center; width: 47px; height: 47px; margin-bottom: 24px; border-radius: 12px; background: #edf0e7; color: var(--green-dark); }
+    .benefit-card:nth-child(even) .benefit-icon { background: #f9e7d9; color: var(--orange-dark); }
+    .benefit-icon .icon { width: 26px; height: 26px; }
+    .benefit-card h3 { font-size: 17px; }
+    .benefit-card p { margin-top: 12px; color: var(--muted); font-size: .875rem; }
+
+    /* Игры: карточки с декоративными, а не официальными обложками */
+    .games-section { padding-top: 0; }
+    .section-heading-row { display: flex; justify-content: space-between; align-items: end; gap: 28px; }
+    .section-heading-row .section-intro { max-width: 395px; margin-top: 0; font-size: 14px; }
+    .game-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; margin-top: 36px; }
+    .game-card { overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); }
+    .game-art { display: flex; align-items: center; justify-content: center; height: 166px; padding: 9px 20px; background: #e8edde; }
+    .game-art svg { width: 280px; height: 148px; }
+    .game-card:nth-child(2) .game-art { background: #eee7db; }
+    .game-card:nth-child(3) .game-art { background: #f5e1d3; }
+    .game-card:nth-child(4) .game-art { background: #eee7d5; }
+    .game-card:nth-child(5) .game-art { background: #f0e2d9; }
+    .game-card:nth-child(6) .game-art { background: #e5e9de; }
+    .game-copy { padding: 23px 25px 27px; }
+    .category { display: inline-block; margin-bottom: 12px; color: var(--green-dark); font-size: .875rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+    .game-copy p { margin-top: 12px; color: var(--muted); font-size: 14px; }
+    .game-details { display: grid; gap: 8px; margin: 20px 0 0; padding-top: 16px; border-top: 1px solid var(--line); font-size: .875rem; line-height: 1.5; }
+    .game-details > div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 12px; }
+    .game-details dt { color: var(--muted); }
+    .game-details dd { min-width: 0; margin: 0; font-weight: 700; }
+    .games-note { margin-top: 22px; color: var(--muted); font-size: .875rem; }
+
+    /* Форматы встреч и стоимость */
+    .meetings-section { border-top: 1px solid #d5ddcc; border-bottom: 1px solid #d5ddcc; background: #e9ede3; }
+    .meeting-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; margin-top: 36px; }
+    .meeting-card { display: flex; flex-direction: column; padding: 28px; border: 1px solid #cbd3c2; border-radius: var(--radius); background: var(--white); }
+    .meeting-card:first-child { border-color: #da9a74; }
+    .meeting-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; margin-bottom: 26px; }
+    .meeting-day { color: var(--green-dark); font-size: .875rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+    .meeting-time { color: var(--muted); font-size: .875rem; font-variant-numeric: tabular-nums; }
+    .meeting-card h3 { font-size: 25px; }
+    .meeting-card p { flex: 1; margin-top: 14px; color: var(--muted); font-size: 14px; }
+    .meeting-duration { display: block; margin-top: 14px; color: var(--green-dark); font-size: .875rem; font-weight: 700; }
+    .meeting-price { margin-top: 28px; margin-bottom: 24px; font-family: Georgia, "Times New Roman", serif; font-size: 38px; font-weight: 700; line-height: 1.1; letter-spacing: -.04em; }
+    .meeting-price span { margin-left: 4px; color: var(--muted); font-family: Arial, Helvetica, sans-serif; font-size: .875rem; font-weight: 400; letter-spacing: 0; }
+    .meeting-card .button { width: 100%; justify-content: space-between; gap: 10px; padding-inline: 16px; }
+    .meeting-notes { display: flex; flex-direction: column; align-items: center; gap: 9px; margin-top: 27px; text-align: center; }
+    .meeting-notes p { color: var(--green-dark); font-size: .875rem; }
+    .meeting-notes .demo-note { color: var(--orange-dark); font-size: .875rem; font-weight: 700; }
+
+    /* Первый визит и открытые ответы на вопросы */
+    .visit-section h2 { max-width: 650px; }
+    .visit-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 38px; margin: 40px 0 0; padding: 0; list-style: none; }
+    .visit-steps li { padding-top: 22px; border-top: 1px solid #b8c0ae; }
+    .step-number { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; margin-bottom: 20px; border: 1px solid #dda17f; border-radius: 50%; color: var(--orange-dark); font-family: Georgia, "Times New Roman", serif; font-size: 19px; }
+    .visit-steps h3 { font-size: 19px; }
+    .visit-steps p { max-width: 295px; margin-top: 12px; color: var(--muted); font-size: 14px; }
+    .faq { margin-top: 66px; }
+    .faq h2 { font-size: 30px; }
+    .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 60px; margin-top: 22px; }
+    .faq-item { padding: 23px 0; border-bottom: 1px solid var(--line); }
+    .faq-item h3 { font-size: 16px; }
+    .faq-item p { margin-top: 9px; color: var(--muted); font-size: 14px; }
+
+    /* Контакты учебного проекта и подвал */
+    .contacts-section { background: var(--green); color: var(--white); }
+    .contact-layout { display: grid; grid-template-columns: 1.1fr 1fr; gap: 85px; align-items: center; }
+    .contacts-section .eyebrow { color: var(--white); }
+    .contact-description { max-width: 420px; margin-top: 23px; color: #fffaf0; font-size: 15px; }
+    .schedule { margin-top: 28px; }
+    .schedule h3 { margin-bottom: 12px; color: var(--white); font-size: .875rem; letter-spacing: .04em; text-transform: uppercase; }
+    .schedule dl { max-width: 340px; margin: 0; font-size: 14px; }
+    .schedule-row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 20px; padding-block: 9px; border-bottom: 1px solid #a5b19c; }
+    .schedule dd { margin: 0; font-variant-numeric: tabular-nums; }
+    .contact-note { position: relative; padding: 34px; border: 1px solid #e0e0d1; border-radius: var(--radius); background: var(--paper); color: var(--ink); }
+    .contact-note .note-icon { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; margin-bottom: 25px; border-radius: 12px; background: #e6e9dc; color: var(--green-dark); }
+    .contact-note h3 { font-family: Georgia, "Times New Roman", serif; font-size: 27px; }
+    .contact-note p { margin-top: 15px; color: var(--muted); font-size: 15px; }
+    .contact-note .note-bottom { margin-top: 24px; padding-top: 18px; border-top: 1px solid #d7dccd; color: var(--green-dark); font-size: .875rem; }
+    .site-footer { padding-block: 40px 27px; background: var(--ink); color: var(--paper); }
+    .footer-top { display: flex; justify-content: space-between; align-items: center; gap: 30px; }
+    .footer-brand { display: flex; align-items: center; gap: 35px; }
+    .footer-brand p { color: #dedfd5; font-size: .875rem; }
+    .back-top { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; font-size: .875rem; }
+    .back-top .icon { transform: rotate(-90deg); width: 17px; height: 17px; }
+    .footer-bottom { margin-top: 28px; padding-top: 20px; border-top: 1px solid #53574c; color: #c7cabe; font-size: .875rem; }
+    .site-footer a:focus-visible, .contacts-section:focus-visible, .contacts-section a:focus-visible { outline-color: #fff2d4; }
+
+    @media (hover: hover) {
+      .button-primary:hover { background: #ef8d5b; transform: translateY(-2px); }
+      .button-secondary:hover { background: #e9ede2; border-color: var(--green); transform: translateY(-2px); }
+      .navigation a:hover { color: var(--orange-dark); }
+      .back-top:hover { color: #f4a778; }
+    }
+    @media (max-width: 1050px) {
+      .container { width: calc(100% - 56px); }
+      .navigation { gap: 19px; }
+      .header-cta { display: none; }
+      .hero { gap: 10px; padding-top: 50px; }
+      .hero h1 { font-size: clamp(43px, 5.4vw, 58px); }
+      .hero-actions { gap: 9px; }
+      .hero-actions .button { padding-inline: 18px; gap: 10px; }
+      .about-layout { gap: 55px; }
+      .benefit-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .benefit-card { display: grid; grid-template-columns: 46px 1fr; align-items: start; gap: 0 20px; }
+      .benefit-icon { grid-row: span 2; margin: 0; }
+      .benefit-card p { grid-column: 2; }
+      .game-copy { padding-inline: 20px; }
+      .meeting-card { padding: 23px; }
+      .meeting-card h3 { font-size: 22px; }
+      .contact-layout { gap: 45px; }
+    }
+    @media (max-width: 760px) {
+      .container { width: calc(100% - 40px); }
+      .section { padding-block: 64px; }
+      :root { --header-height: 72px; }
+      .site-header { position: static; }
+      .js .site-header { position: sticky; }
+      .header-inner { flex-wrap: wrap; gap: 0; min-height: 72px; padding-block: 18px; }
+      .logo { font-size: 27px; }
+      .logo-mark { width: 30px; height: 30px; }
+      .navigation { flex-basis: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 12px; margin-top: 12px; }
+      .navigation a { min-height: 44px; padding: 10px 4px; font-size: .875rem; }
+      .js .header-inner { flex-wrap: nowrap; padding-block: 12px; }
+      .js .menu-toggle { display: inline-flex; }
+      .js .navigation { position: absolute; top: 100%; left: -20px; right: -20px; display: none; gap: 0; max-height: calc(100vh - var(--header-height)); max-height: calc(100dvh - var(--header-height)); margin-top: 0; padding: 10px 20px 18px; overflow-y: auto; overscroll-behavior: contain; border-bottom: 1px solid var(--line); background: var(--paper); box-shadow: 0 10px 16px #2528230a; }
+      .js .navigation.is-open { display: flex; flex-direction: column; align-items: stretch; }
+      .js .navigation a { min-height: 44px; padding: 11px 12px; border-radius: 6px; font-size: 14px; }
+      .hero { grid-template-columns: 1fr; gap: 22px; padding-top: 28px; padding-bottom: 33px; }
+      .hero .eyebrow { margin-bottom: 12px; }
+      .hero h1 { max-width: 600px; font-size: clamp(32px, 7vw, 50px); }
+      .demo-notice { margin-top: 12px; }
+      .hero-description { max-width: 550px; margin-top: 14px; }
+      .hero-actions { margin-top: 18px; }
+      .hero-note { margin-top: 20px; }
+      .hero-art { width: min(450px, 100%); margin: 0 auto; }
+      .art-caption { bottom: 5px; }
+      .hero-bottom { justify-content: center; flex-wrap: wrap; gap: 12px 22px; padding-block: 19px; }
+      .about-layout { grid-template-columns: 1fr; gap: 23px; }
+      .about-layout h2 { max-width: 550px; }
+      .about-copy { max-width: 620px; padding-top: 0; }
+      .benefits { margin-top: 40px; }
+      .benefit-card { display: block; padding: 23px; }
+      .benefit-icon { margin-bottom: 19px; }
+      .section-heading-row { display: block; }
+      .section-heading-row .section-intro { max-width: 580px; margin-top: 20px; }
+      .games-section { padding-top: 0; }
+      .game-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 28px; }
+      .game-art { height: 150px; padding-inline: 10px; }
+      .game-art svg { height: 135px; }
+      .game-copy { padding: 20px; }
+      .meeting-grid { grid-template-columns: 1fr; gap: 17px; margin-top: 28px; }
+      .meeting-card { display: grid; grid-template-columns: 1fr auto; gap: 0 20px; padding: 26px; }
+      .meeting-top { grid-column: 1 / -1; margin-bottom: 20px; }
+      .meeting-card h3 { grid-column: 1; font-size: 25px; }
+      .meeting-card p { grid-column: 1; max-width: 380px; margin-top: 11px; }
+      .meeting-price { grid-column: 2; grid-row: 2 / 4; align-self: center; margin: 0; font-size: 33px; }
+      .meeting-price span { display: block; margin: 5px 0 0; font-size: .875rem; }
+      .meeting-duration { grid-column: 1; }
+      .meeting-card .button { grid-column: 1 / -1; margin-top: 22px; }
+      .visit-steps { grid-template-columns: 1fr; gap: 24px; margin-top: 30px; }
+      .visit-steps li { display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 0 17px; padding-top: 22px; }
+      .step-number { grid-row: span 2; margin: 0; }
+      .visit-steps h3 { align-self: center; font-size: 18px; }
+      .visit-steps p { grid-column: 2; max-width: none; font-size: .875rem; }
+      .faq-grid { gap: 0 30px; }
+      .contact-layout { grid-template-columns: 1fr; gap: 35px; }
+      .contact-description { max-width: 540px; }
+      .contact-note { max-width: 600px; }
+      .footer-brand { display: block; }
+      .footer-brand p { margin-top: 17px; max-width: 260px; }
+    }
+    @media (max-width: 600px) {
+      .benefit-grid, .game-grid, .faq-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 460px) {
+      .container { width: calc(100% - 36px); }
+      .hero { padding-top: 24px; }
+      .hero h1 { font-size: clamp(32px, 8vw, 37px); }
+      .hero-description { font-size: 1rem; }
+      .hero-actions { display: grid; grid-template-columns: 1fr; }
+      .hero-actions .button { justify-content: space-between; }
+      .hero-note { font-size: .875rem; }
+      .hero-art { margin-top: 4px; }
+      .art-caption { position: static; justify-content: center; width: fit-content; margin: 0 auto; padding: 7px 12px; font-size: .875rem; transform: none; }
+      .hero-bottom { flex-direction: column; align-items: start; gap: 10px; }
+      .benefit-grid, .game-grid, .visit-steps, .faq-grid { grid-template-columns: 1fr; }
+      .benefit-card { display: grid; grid-template-columns: 46px 1fr; gap: 0 17px; padding: 22px; }
+      .benefit-icon { grid-row: span 2; margin: 0; }
+      .benefit-card p { grid-column: 2; }
+      .game-grid { gap: 20px; }
+      .game-art { height: 170px; }
+      .game-art svg { height: 150px; }
+      .game-copy { padding: 23px; }
+      .meeting-card { grid-template-columns: 1fr; padding: 25px; }
+      .meeting-card h3, .meeting-card p, .meeting-duration, .meeting-price, .meeting-card .button { grid-column: 1; }
+      .meeting-price { grid-row: auto; margin-top: 22px; }
+      .meeting-price span { display: inline; margin-left: 5px; }
+      .meeting-notes { align-items: start; text-align: left; }
+      .visit-steps { gap: 24px; margin-top: 30px; }
+      .visit-steps li { display: grid; grid-template-columns: 38px 1fr; gap: 0 17px; padding-top: 22px; }
+      .step-number { grid-row: span 2; margin: 0; }
+      .visit-steps h3 { align-self: center; font-size: 18px; }
+      .visit-steps p { grid-column: 2; max-width: none; font-size: 14px; }
+      .faq { margin-top: 45px; }
+      .contact-note { padding: 27px; }
+      .footer-top { align-items: start; gap: 18px; }
+      .footer-brand p { max-width: 200px; }
+      .back-top { white-space: nowrap; font-size: .875rem; }
+      .js .navigation { left: -18px; right: -18px; padding-inline: 18px; }
+    }
+    @media (max-width: 359px) {
+      .hero h1 { font-size: 32px; }
+      .benefit-card { display: block; }
+      .benefit-icon { margin-bottom: 15px; }
+      .footer-top { flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#top">Перейти к содержимому</a>
+
+  <!-- Локальная библиотека SVG-иконок: без внешних ресурсов -->
+  <svg class="svg-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
+      <symbol id="icon-book" viewBox="0 0 24 24"><path d="M12 6v15M3 4c4-1 6 0 9 2 3-2 5-3 9-2v15c-4-1-6 0-9 2-3-2-5-3-9-2Z"/></symbol>
+      <symbol id="icon-people" viewBox="0 0 24 24"><circle cx="9" cy="7" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m1-17a3 3 0 0 1 0 6m2 4a5 5 0 0 1 3 4v3"/></symbol>
+      <symbol id="icon-spark" viewBox="0 0 24 24"><path d="m12 3 2.6 6.4L21 12l-6.4 2.6L12 21l-2.6-6.4L3 12l6.4-2.6ZM20 2v4m-2-2h4"/></symbol>
+      <symbol id="icon-table" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="5" rx="1.5"/><path d="M5 12v9m14-9v9M9 3h6m-3-1v5"/></symbol>
+      <symbol id="icon-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></symbol>
+      <symbol id="icon-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v.2"/></symbol>
+      <symbol id="icon-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+      <symbol id="logo-die" viewBox="0 0 36 36"><rect x="3" y="3" width="30" height="30" rx="9" fill="currentColor"/><g fill="#252823"><circle cx="12" cy="12" r="2"/><circle cx="24" cy="12" r="2"/><circle cx="18" cy="18" r="2"/><circle cx="12" cy="24" r="2"/><circle cx="24" cy="24" r="2"/></g></symbol>
+    </defs>
+  </svg>
+
+  <!-- Шапка -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="#top" aria-label="Сбор — к началу страницы"><svg class="logo-mark" aria-hidden="true"><use href="#logo-die"/></svg>Сбор</a>
+      <button class="menu-toggle" type="button" aria-controls="main-navigation" aria-expanded="false" aria-label="Открыть меню"><span>Меню</span><svg class="icon" aria-hidden="true"><use href="#icon-menu"/></svg></button>
+      <nav class="navigation" id="main-navigation" aria-label="Основная навигация">
+        <a href="#about">О клубе</a>
+        <a href="#games">Игры</a>
+        <a href="#meetings">Встречи</a>
+        <a href="#first-visit">Первый визит</a>
+        <a href="#contacts">О проекте</a>
+      </nav>
+      <a class="button button-secondary header-cta" href="#meetings">Встречи и цены<svg class="icon" aria-hidden="true"><use href="#icon-arrow"/></svg></a>
+    </div>
+  </header>
+
+  <main id="top" tabindex="-1">
+    <!-- Главный экран -->
+    <section class="container hero" aria-labelledby="hero-title">
+      <div>
+        <p class="eyebrow">Клуб настольных игр</p>
+        <h1 id="hero-title">Настольные игры <em>в хорошей компании.</em></h1>
+        <p class="demo-notice">Учебный макет · запись недоступна</p>
+        <p class="hero-description">Играй с друзьями или приходи один — ведущий поможет освоиться.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#meetings">Посмотреть встречи<svg class="icon" aria-hidden="true"><use href="#icon-arrow"/></svg></a>
+          <a class="button button-secondary" href="#games">Посмотреть игры<svg class="icon" aria-hidden="true"><use href="#icon-arrow"/></svg></a>
+        </div>
+        <p class="hero-note"><svg class="icon" aria-hidden="true"><use href="#icon-check"/></svg>Без опыта и своей компании — тоже можно</p>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <svg viewBox="0 0 520 500" xmlns="http://www.w3.org/2000/svg" focusable="false">
+          <defs><pattern id="board-grid" width="55" height="55" patternUnits="userSpaceOnUse"><path d="M55 0H0V55" fill="none" stroke="#cbd2bd" stroke-width="1"/></pattern></defs>
+          <circle cx="276" cy="245" r="209" fill="#ecebda"/>
+          <circle cx="276" cy="245" r="196" fill="none" stroke="#d2d5c3" stroke-dasharray="3 8"/>
+          <path d="M53 136h24m-12-12v24M446 350h20m-10-10v20" stroke="#63745a" stroke-width="2"/>
+          <circle cx="441" cy="91" r="5" fill="#e87842"/><circle cx="61" cy="364" r="4" fill="#63745a"/>
+          <g transform="translate(121 104) rotate(11 154 157)">
+            <rect x="6" y="11" width="310" height="316" rx="18" fill="#c1c9b4"/>
+            <rect width="310" height="316" rx="18" fill="#e0e5d5" stroke="#869777" stroke-width="1.5"/>
+            <rect x="18" y="18" width="274" height="280" rx="8" fill="url(#board-grid)"/>
+            <path d="M33 242c44 2 51-59 96-54s21-70 65-81 52 25 80-35" fill="none" stroke="#63745a" stroke-width="3" stroke-dasharray="6 7"/>
+            <rect x="29" y="29" width="71" height="71" rx="5" fill="#f7f3ea" stroke="#bdc7ad"/>
+            <path d="M29 64h71m-36-35v71" stroke="#d7ae73" stroke-width="13"/>
+            <circle cx="64" cy="64" r="14" fill="#f7f3ea"/>
+            <rect x="188" y="197" width="81" height="81" rx="5" fill="#bbc7a9" stroke="#9eae8c"/>
+            <path d="m204 247 16-16 17 16v21h-33Zm9-16v-15h14v15" fill="#63745a"/><path d="m224 252 15-16 17 16v16h-32Z" fill="#7e906b"/>
+            <circle cx="259" cy="55" r="15" fill="#e87842" stroke="#91401b" stroke-width="1.5"/><circle cx="259" cy="55" r="8" fill="none" stroke="#f7d2b8"/>
+          </g>
+          <g transform="translate(76 221) rotate(-16 65 94)">
+            <rect x="5" y="8" width="133" height="189" rx="12" fill="#c9baa6"/>
+            <rect width="133" height="189" rx="12" fill="#fffaf0" stroke="#adac96" stroke-width="1.5"/>
+            <rect x="11" y="11" width="111" height="167" rx="7" fill="#e87842"/>
+            <path d="M25 33h15m-8-8v15m61 116h15m-8-8v16" stroke="#733b23" stroke-width="1.5"/>
+            <path d="m67 49 12 30 31 13-31 13-12 31-13-31-30-13 30-13Z" fill="#f7edda" stroke="#91401b" stroke-width="1.5"/>
+            <circle cx="67" cy="92" r="10" fill="#63745a"/>
+            <path d="M51 159h32" stroke="#91401b" stroke-width="2"/>
+          </g>
+          <g transform="translate(315 301) rotate(12 52 52)">
+            <rect x="4" y="8" width="100" height="100" rx="22" fill="#c9c4b1"/>
+            <rect width="100" height="100" rx="22" fill="#fffdf8" stroke="#a9ad9b" stroke-width="1.5"/>
+            <g fill="#252823"><circle cx="27" cy="27" r="7"/><circle cx="73" cy="27" r="7"/><circle cx="50" cy="50" r="7"/><circle cx="27" cy="73" r="7"/><circle cx="73" cy="73" r="7"/></g>
+          </g>
+          <g transform="translate(264 57) rotate(-8 45 55)">
+            <ellipse cx="45" cy="108" rx="42" ry="10" fill="#252823" opacity=".09"/>
+            <path d="M29 43a22 22 0 1 1 32 0l24 27-14 12-10-10 9 31H20l9-31-10 10L5 70Z" fill="#63745a" stroke="#43543c" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M32 12a16 16 0 0 1 20-2M22 94h43" fill="none" stroke="#93a583" stroke-width="3" stroke-linecap="round"/>
+          </g>
+          <g transform="translate(398 178) rotate(14 35 42)">
+            <ellipse cx="34" cy="83" rx="30" ry="7" fill="#252823" opacity=".08"/>
+            <path d="M21 31a17 17 0 1 1 26 0l18 20-10 10-9-9 7 25H15l7-25-9 9L3 51Z" fill="#e87842" stroke="#91401b" stroke-width="1.7" stroke-linejoin="round"/>
+            <path d="M24 8a11 11 0 0 1 13-2" fill="none" stroke="#f9b38d" stroke-width="3" stroke-linecap="round"/>
+          </g>
+          <path d="M53 426c23 21 56 25 84 16m-9-6 10 6-6 10" fill="none" stroke="#63745a" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span class="art-caption"><svg class="icon"><use href="#icon-spark"/></svg>Твой ход — присоединиться</span>
+      </div>
+    </section>
+    <ul class="container hero-bottom" role="list" aria-label="Что ждёт в клубе">
+      <li><svg class="icon" aria-hidden="true"><use href="#icon-book"/></svg>Объясним правила</li>
+      <li><svg class="icon" aria-hidden="true"><use href="#icon-people"/></svg>Поможем найти компанию</li>
+      <li><svg class="icon" aria-hidden="true"><use href="#icon-table"/></svg>Подготовим игры и стол</li>
+    </ul>
+
+    <!-- О клубе и преимущества -->
+    <section class="container section" id="about" tabindex="-1" aria-labelledby="about-title">
+      <div class="about-layout">
+        <div><p class="eyebrow">01 / О клубе</p><h2 id="about-title">Собираемся за одним столом</h2></div>
+        <div class="about-copy">
+          <p>Мы собираемся за одним столом, чтобы общаться, пробовать новые игры и проводить время вместе. Здесь не нужно заранее знать правила: ведущий поможет выбрать игру и объяснит, с чего начать.</p>
+          <p>Можно прийти с друзьями или присоединиться к другим участникам. Главное — желание провести время вместе и попробовать что-то новое.</p>
+        </div>
+      </div>
+      <div class="benefits">
+        <h2>Легко сделать первый ход</h2>
+        <div class="benefit-grid">
+          <article class="benefit-card"><div class="benefit-icon"><svg class="icon" aria-hidden="true"><use href="#icon-book"/></svg></div><h3>Поможем с правилами</h3><p>Перед началом объясним основные действия и поможем освоиться.</p></article>
+          <article class="benefit-card"><div class="benefit-icon"><svg class="icon" aria-hidden="true"><use href="#icon-people"/></svg></div><h3>Можно прийти одному</h3><p>Подберём стол с другими участниками, чтобы ты смог включиться в игру.</p></article>
+          <article class="benefit-card"><div class="benefit-icon"><svg class="icon" aria-hidden="true"><use href="#icon-spark"/></svg></div><h3>Игры под настроение</h3><p>Предложим спокойный, творческий или соревновательный формат.</p></article>
+          <article class="benefit-card"><div class="benefit-icon"><svg class="icon" aria-hidden="true"><use href="#icon-table"/></svg></div><h3>Всё готово к встрече</h3><p>Игры и пространство подготовлены организаторами.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Подборка игр -->
+    <section class="container section games-section" id="games" tabindex="-1" aria-labelledby="games-title">
+      <div class="section-heading-row">
+        <div><p class="eyebrow">02 / Игры</p><h2 id="games-title">Во что играем</h2></div>
+        <p class="section-intro">В подборке есть игры для знакомства, общения и вдумчивых партий. На встрече поможем выбрать подходящую.</p>
+      </div>
+      <div class="game-grid">
+        <article class="game-card">
+          <div class="game-art" aria-hidden="true">
+            <svg viewBox="0 0 280 150" focusable="false"><g transform="translate(75 19) rotate(-9 61 57)"><rect x="4" y="5" width="122" height="113" rx="7" fill="#b8c3a8"/><rect width="122" height="113" rx="7" fill="#f7f3ea" stroke="#8c9d7b"/><path d="M0 61h122m-61-61v113" stroke="#d9b078" stroke-width="15"/><path d="m14 34 15-13 14 13v14H14Zm72 49 14-13 13 13v17H86Z" fill="#63745a"/><circle cx="61" cy="61" r="15" fill="#f7f3ea"/></g><g fill="#e87842" stroke="#91401b" stroke-linejoin="round"><path d="M204 60a10 10 0 1 1 14 0l12 14-7 6-5-5 4 18h-22l4-18-5 5-7-6Z"/></g><path d="M46 115h10m-5-5v10m176-88h10m-5-5v10" stroke="#849574" stroke-width="1.5"/></svg>
+          </div>
+          <div class="game-copy">
+            <span class="category">Стратегия</span><h3>Каркассон</h3>
+            <p>Создавай общее игровое пространство из отдельных участков и продумывай свои ходы.</p>
+            <!-- Базовая игра: https://www.zmangames.com/game/carcassonne/ -->
+            <dl class="game-details"><div><dt>Игроки</dt><dd>2–5</dd></div><div><dt>Партия</dt><dd>30–45 мин</dd></div><div><dt>Сложность</dt><dd>Средняя</dd></div></dl>
+          </div>
+        </article>
+        <article class="game-card">
+          <div class="game-art" aria-hidden="true">
+            <svg viewBox="0 0 280 150" focusable="false"><g transform="translate(74 20) rotate(-14 45 58)"><rect width="85" height="115" rx="8" fill="#63745a" stroke="#43543c"/><rect x="7" y="7" width="71" height="101" rx="5" fill="none" stroke="#aebc9b"/><path d="m42 29 8 19 20 8-20 8-8 20-8-20-20-8 20-8Z" fill="#f7edda"/></g><g transform="translate(130 16) rotate(12 43 58)"><rect x="3" y="4" width="85" height="115" rx="8" fill="#bdae97"/><rect width="85" height="115" rx="8" fill="#f9f3e4" stroke="#ada28b"/><circle cx="43" cy="44" r="23" fill="#e87842"/><path d="M10 95c8-24 25-13 33-32 14 6 13 24 33 32" fill="#63745a"/><path d="m21 22 4 6m39-2 5-5" stroke="#91401b"/></g><path d="M46 48h12m-6-6v12m180 50h12m-6-6v12" stroke="#b29d7e" stroke-width="1.5"/></svg>
+          </div>
+          <div class="game-copy">
+            <span class="category">Воображение</span><h3>Диксит</h3>
+            <p>Придумывай ассоциации к необычным иллюстрациям и попробуй понять идеи других игроков.</p>
+            <!-- Современная базовая версия на 8 игроков: https://www.libellud.com/game/dixit/ -->
+            <dl class="game-details"><div><dt>Игроки</dt><dd>3–8</dd></div><div><dt>Партия</dt><dd>30 мин</dd></div><div><dt>Сложность</dt><dd>Низкая</dd></div></dl>
+          </div>
+        </article>
+        <article class="game-card">
+          <div class="game-art" aria-hidden="true">
+            <svg viewBox="0 0 280 150" focusable="false"><g transform="translate(63 30) rotate(-6 78 45)" stroke="#a99880"><rect width="48" height="36" rx="4" fill="#e87842"/><rect x="55" width="48" height="36" rx="4" fill="#f7f3ea"/><rect x="110" width="48" height="36" rx="4" fill="#63745a"/><rect y="44" width="48" height="36" rx="4" fill="#f7f3ea"/><rect x="55" y="44" width="48" height="36" rx="4" fill="#63745a"/><rect x="110" y="44" width="48" height="36" rx="4" fill="#e87842"/></g><g transform="translate(62 29) rotate(-6 78 45)" stroke="#252823" stroke-width="1.5"><path d="M13 18h22m33 0h22m32 0h22M13 62h22m33 0h22m32 0h22"/></g><path d="M120 123q25 19 52-4m-6-2 7 2-3 7" fill="none" stroke="#91401b" stroke-width="1.5"/></svg>
+          </div>
+          <div class="game-copy">
+            <span class="category">Командная игра</span><h3>Кодовые имена</h3>
+            <p>Обсуждай подсказки и находи связи между словами вместе со своей командой.</p>
+            <!-- Основной командный режим: https://www.czechgames.com/games/codenames -->
+            <dl class="game-details"><div><dt>Игроки</dt><dd>От 4, две команды</dd></div><div><dt>Партия</dt><dd>15 мин</dd></div><div><dt>Сложность</dt><dd>Низкая</dd></div></dl>
+          </div>
+        </article>
+        <article class="game-card">
+          <div class="game-art" aria-hidden="true">
+            <svg viewBox="0 0 280 150" focusable="false"><path d="m53 101 69-54 90 54M122 47l31 60M53 101l100 6" fill="none" stroke="#bcb29c" stroke-width="9"/><path d="m53 101 69-54 90 54M122 47l31 60M53 101l100 6" fill="none" stroke="#f7f3ea" stroke-width="3" stroke-dasharray="2 8"/><g fill="#63745a" stroke="#43543c"><circle cx="53" cy="101" r="7"/><circle cx="122" cy="47" r="7"/><circle cx="212" cy="101" r="7"/><circle cx="153" cy="107" r="7"/></g><g transform="translate(155 49) rotate(31)"><rect width="47" height="23" rx="5" fill="#e87842" stroke="#91401b"/><path d="M8 7h10m6 0h10" stroke="#f7edda" stroke-width="5"/><circle cx="10" cy="25" r="4" fill="#252823"/><circle cx="36" cy="25" r="4" fill="#252823"/></g><path d="M49 43h12m-6-6v12m173 78h12m-6-6v12" stroke="#a29577" stroke-width="1.5"/></svg>
+          </div>
+          <div class="game-copy">
+            <span class="category">Приключение</span><h3>Билет на поезд: Европа</h3>
+            <p>Планируй маршруты и соединяй города на игровом поле.</p>
+            <!-- Версия Europe: https://www.daysofwonder.com/game/ticket-to-ride-europe/ -->
+            <dl class="game-details"><div><dt>Игроки</dt><dd>2–5</dd></div><div><dt>Партия</dt><dd>30–60 мин</dd></div><div><dt>Сложность</dt><dd>Средняя</dd></div></dl>
+          </div>
+        </article>
+        <article class="game-card">
+          <div class="game-art" aria-hidden="true">
+            <svg viewBox="0 0 280 150" focusable="false"><g transform="translate(75 24) rotate(-18 38 51)"><rect width="76" height="106" rx="9" fill="#fffaf0" stroke="#b5a88c"/><rect x="7" y="7" width="62" height="92" rx="5" fill="#63745a"/><ellipse cx="38" cy="53" rx="21" ry="33" transform="rotate(25 38 53)" fill="#f5ecd9"/></g><g transform="translate(134 19) rotate(12 38 53)"><rect x="3" y="4" width="76" height="106" rx="9" fill="#c2af9c"/><rect width="76" height="106" rx="9" fill="#fffaf0" stroke="#b5a88c"/><rect x="7" y="7" width="62" height="92" rx="5" fill="#e87842"/><ellipse cx="38" cy="53" rx="21" ry="33" transform="rotate(25 38 53)" fill="#f5ecd9"/><path d="M40 37H27v10h13c13 0 13 24-1 24h-8" fill="none" stroke="#91401b" stroke-width="5" stroke-linecap="round"/></g><path d="m224 29 7-6m2 21h10M54 117l-7 6" stroke="#a78264" stroke-width="1.5"/></svg>
+          </div>
+          <div class="game-copy">
+            <span class="category">Карточная игра</span><h3>Уно</h3>
+            <p>Подбирай карты по цвету или числу и старайся первым освободить руку.</p>
+            <!-- Классическая UNO: https://shop.mattel.com/products/uno-card-game-42003 -->
+            <dl class="game-details"><div><dt>Игроки</dt><dd>2–10</dd></div><div><dt>Партия</dt><dd>Зависит от числа раундов</dd></div><div><dt>Сложность</dt><dd>Низкая</dd></div></dl>
+          </div>
+        </article>
+        <article class="game-card">
+          <div class="game-art" aria-hidden="true">
+            <svg viewBox="0 0 280 150" focusable="false"><g transform="translate(70 79) skewX(-20)"><rect width="145" height="48" rx="3" fill="#f7f3ea" stroke="#a2b08f"/><path d="M0 0h29v24H0Zm58 0h29v24H58Zm58 0h29v24h-29ZM29 24h29v24H29Zm58 0h29v24H87Z" fill="#abb99a"/></g><g fill="#63745a" stroke="#43543c" stroke-width="1.5"><path d="M100 40h34l-1 16-7 5 4 27H104l4-27-7-5Z"/><path d="M99 33h8v7h6v-7h8v7h6v-7h8v15H99Z"/><path d="M98 89h38v8H98Z"/></g><g fill="#f7f3ea" stroke="#9d9b85" stroke-width="1.5"><circle cx="171" cy="53" r="12"/><path d="M167 65h8l6 26h-20Zm-10 27h28v7h-28Z"/></g><path d="M49 46h12m-6-6v12m169 22h12m-6-6v12" stroke="#7d916c" stroke-width="1.5"/></svg>
+          </div>
+          <div class="game-copy">
+            <span class="category">Классика</span><h3>Шахматы</h3>
+            <p>Попробуй знакомую игру, в которой каждый ход влияет на дальнейший план.</p>
+            <dl class="game-details"><div><dt>Игроки</dt><dd>2</dd></div><div><dt>Партия</dt><dd>По выбранному контролю времени</dd></div><div><dt>Сложность</dt><dd>Высокая</dd></div></dl>
+          </div>
+        </article>
+      </div>
+      <p class="games-note">Сложность — ориентир для первого знакомства с правилами. Время партии зависит от темпа игроков; характеристики могут различаться у разных изданий.</p>
+    </section>
+
+    <!-- Встречи и цены -->
+    <section class="section meetings-section" id="meetings" tabindex="-1" aria-labelledby="meetings-title">
+      <div class="container">
+        <p class="eyebrow">03 / Встречи</p><h2 id="meetings-title">Выбери свой сбор</h2>
+        <p class="section-intro">Пример форматов вымышленного клуба. Расписание и цены демонстрационные, запись недоступна.</p>
+        <div class="meeting-grid">
+          <article class="meeting-card"><div class="meeting-top"><span class="meeting-day">Среда</span><span class="meeting-time">18:00–22:00</span></div><h3>Первый ход</h3><p>Встреча для новичков с объяснением правил.</p><span class="meeting-duration">Продолжительность: 4 часа</span><div class="meeting-price">300 ₽<span>/ встреча</span></div><a class="button button-primary" href="#contacts" aria-label="О записи в учебном проекте: Первый ход">О записи<svg class="icon" aria-hidden="true"><use href="#icon-arrow"/></svg></a></article>
+          <article class="meeting-card"><div class="meeting-top"><span class="meeting-day">Пятница</span><span class="meeting-time">19:00–23:00</span></div><h3>Пятничный сбор</h3><p>Вечер для общения и знакомства с разными играми.</p><span class="meeting-duration">Продолжительность: 4 часа</span><div class="meeting-price">400 ₽<span>/ встреча</span></div><a class="button button-secondary" href="#contacts" aria-label="О записи в учебном проекте: Пятничный сбор">О записи<svg class="icon" aria-hidden="true"><use href="#icon-arrow"/></svg></a></article>
+          <article class="meeting-card"><div class="meeting-top"><span class="meeting-day">Суббота</span><span class="meeting-time">16:00–22:00</span></div><h3>Большой стол</h3><p>Встреча для тех, кто хочет провести за играми больше времени.</p><span class="meeting-duration">Продолжительность: 6 часов</span><div class="meeting-price">500 ₽<span>/ встреча</span></div><a class="button button-secondary" href="#contacts" aria-label="О записи в учебном проекте: Большой стол">О записи<svg class="icon" aria-hidden="true"><use href="#icon-arrow"/></svg></a></article>
+        </div>
+        <div class="meeting-notes"><p>В стоимость входит участие во встрече и использование игр клуба.</p><p class="demo-note">Расписание и цены приведены для демонстрации учебного проекта.</p></div>
+      </div>
+    </section>
+
+    <!-- Первый визит и FAQ: все ответы видны сразу -->
+    <section class="container section visit-section" id="first-visit" tabindex="-1" aria-labelledby="visit-title">
+      <p class="eyebrow">04 / Первый визит</p><h2 id="visit-title">Первый раз? Вот как всё устроено</h2>
+      <p class="section-intro">Так мог бы проходить первый визит в реальный клуб. На этом учебном сайте встречи не проводятся.</p>
+      <ol class="visit-steps" role="list">
+        <li><span class="step-number" aria-hidden="true">1</span><h3>Выбери встречу</h3><p>Посмотри расписание и найди подходящий формат.</p></li>
+        <li><span class="step-number" aria-hidden="true">2</span><h3>Свяжись с организатором</h3><p>Перед посещением уточни наличие мест и условия участия.</p></li>
+        <li><span class="step-number" aria-hidden="true">3</span><h3>Приходи к началу</h3><p>Познакомимся, выберем игру и разберём правила.</p></li>
+      </ol>
+      <div class="faq">
+        <h2>Остались вопросы?</h2>
+        <div class="faq-grid">
+          <article class="faq-item"><h3>Можно ли прийти одному?</h3><p>Да. По концепции клуба организатор помогает присоединиться к другим участникам.</p></article>
+          <article class="faq-item"><h3>Нужно ли знать правила?</h3><p>Нет. Перед началом ведущий объясняет основные действия.</p></article>
+          <article class="faq-item"><h3>Можно ли принести свою игру?</h3><p>Да, предварительно обсудив это с организатором.</p></article>
+          <article class="faq-item"><h3>Что входит в стоимость?</h3><p>Участие во встрече и использование игр клуба.</p></article>
+          <article class="faq-item"><h3>Нужно ли записываться заранее?</h3><p>Да. Это помогает организатору подготовить столы и подобрать игры.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- О проекте и записи -->
+    <section class="section contacts-section" id="contacts" tabindex="-1" aria-labelledby="contacts-title">
+      <div class="container contact-layout">
+        <div>
+          <p class="eyebrow">05 / О проекте</p><h2 id="contacts-title">О проекте и записи</h2>
+          <p class="contact-description">«Сбор» — учебный лендинг вымышленного клуба. Здесь можно посмотреть концепцию, игры и пример расписания.</p>
+          <div class="schedule"><h3>Демонстрационный график</h3><dl><div class="schedule-row"><dt>Среда</dt><dd>18:00–22:00</dd></div><div class="schedule-row"><dt>Пятница</dt><dd>19:00–23:00</dd></div><div class="schedule-row"><dt>Суббота</dt><dd>16:00–22:00</dd></div></dl></div>
+        </div>
+        <aside class="contact-note" aria-labelledby="contact-note-title">
+          <div class="note-icon"><svg class="icon" aria-hidden="true"><use href="#icon-info"/></svg></div>
+          <h3 id="contact-note-title">Почему запись недоступна?</h3>
+          <p>У вымышленного клуба нет реального организатора и адреса. Поэтому кнопки ведут к этому пояснению, а запись через сайт не выполняется.</p>
+          <p class="note-bottom">Клуб, расписание и условия участия вымышлены.</p>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <!-- Подвал -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top"><div class="footer-brand"><a class="logo" href="#top" aria-label="Сбор — к началу страницы"><svg class="logo-mark" aria-hidden="true"><use href="#logo-die"/></svg>Сбор</a><p>Настольные игры. Живое общение.<br>Хорошая компания.</p></div><a class="back-top" href="#top">Наверх<svg class="icon" aria-hidden="true"><use href="#icon-arrow"/></svg></a></div>
+      <p class="footer-bottom">Учебный проект по информатике. Клуб, расписание и предложения вымышлены.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Без JavaScript мобильная навигация остаётся видимой.
+    const menuButton = document.querySelector('.menu-toggle');
+    const navigation = document.querySelector('.navigation');
+    const header = document.querySelector('.site-header');
+    const headerInner = document.querySelector('.header-inner');
+    const navigationLinks = [...navigation.querySelectorAll('a[href^="#"]')];
+    const navigationSections = navigationLinks.map((link) => document.getElementById(link.hash.slice(1)));
+    const mobileViewport = window.matchMedia('(max-width: 760px)');
+    let updatePending = false;
+
+    function setMenuOpen(isOpen, restoreFocus = false) {
+      const open = isOpen && mobileViewport.matches;
+      navigation.classList.toggle('is-open', open);
+      menuButton.setAttribute('aria-expanded', String(open));
+      menuButton.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+      if (!open && restoreFocus && mobileViewport.matches) menuButton.focus();
+    }
+
+    function setCurrentSection(sectionId) {
+      navigationLinks.forEach((link) => {
+        if (link.hash === '#' + sectionId) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      });
+    }
+
+    function updatePagePosition() {
+      updatePending = false;
+      const headerHeight = header.getBoundingClientRect().height;
+      document.documentElement.style.setProperty('--header-height', headerHeight + 'px');
+      let currentSection = '';
+      navigationSections.forEach((section) => {
+        if (section.getBoundingClientRect().top <= headerHeight + 24) currentSection = section.id;
+      });
+      // Последний раздел может быть ниже порога даже после прокрутки до самого низа.
+      if (window.scrollY > 0 && window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 4) {
+        currentSection = navigationSections[navigationSections.length - 1].id;
+      }
+      setCurrentSection(currentSection);
+    }
+
+    function schedulePositionUpdate() {
+      if (!updatePending) {
+        updatePending = true;
+        window.requestAnimationFrame(updatePagePosition);
+      }
+    }
+
+    menuButton.addEventListener('click', () => {
+      setMenuOpen(menuButton.getAttribute('aria-expanded') !== 'true');
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && menuButton.getAttribute('aria-expanded') === 'true') {
+        event.preventDefault();
+        setMenuOpen(false, true);
+      }
+    });
+    document.addEventListener('click', (event) => {
+      const link = event.target.closest('a[href^="#"]');
+      const regularClick = event.button === 0 && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey;
+      if (link && regularClick && !event.defaultPrevented) {
+        const destination = document.getElementById(link.hash.slice(1));
+        if (destination) {
+          setMenuOpen(false);
+          // Сохраняем обычный переход по якорю и историю, но убираем фокус из скрытого меню.
+          destination.focus({ preventScroll: true });
+          setCurrentSection(destination.id);
+        }
+      } else if (!headerInner.contains(event.target)) {
+        setMenuOpen(false, navigation.contains(document.activeElement));
+      }
+    });
+    document.addEventListener('focusin', (event) => {
+      if (!headerInner.contains(event.target)) setMenuOpen(false);
+    });
+    mobileViewport.addEventListener('change', (event) => {
+      const navigationHadFocus = navigation.contains(document.activeElement);
+      const toggleHadFocus = document.activeElement === menuButton;
+      setMenuOpen(false);
+      if (event.matches && navigationHadFocus) menuButton.focus();
+      else if (!event.matches && toggleHadFocus) {
+        const currentLink = navigationLinks.find((link) => link.hasAttribute('aria-current'));
+        (currentLink || navigationLinks[0]).focus();
+      }
+      schedulePositionUpdate();
+    });
+    window.addEventListener('scroll', schedulePositionUpdate, { passive: true });
+    window.addEventListener('resize', schedulePositionUpdate);
+    window.addEventListener('hashchange', schedulePositionUpdate);
+    if ('ResizeObserver' in window) new ResizeObserver(schedulePositionUpdate).observe(header);
+    document.documentElement.classList.add('js');
+    updatePagePosition();
+  </script>
+</body>
+</html>
